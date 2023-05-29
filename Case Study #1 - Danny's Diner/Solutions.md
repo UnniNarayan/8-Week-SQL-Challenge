@@ -33,3 +33,26 @@ ORDER BY s.customer_id
 - Customer C spent $36.
 
 ***
+### 2. How many days has each customer visited the restaurant?
+
+````sql
+SELECT customer_id, count(distinct order_date) as visits
+FROM dd.sales
+GROUP BY customer_id
+````
+
+#### Steps:
+- Use **DISTINCT** and wrap with **COUNT** to find out the ```visits``` for each customer.
+
+#### Answer:
+| customer_id | visits |
+| ----------- | ----------- |
+| A           | 4          |
+| B           | 6          |
+| C           | 2          |
+
+- Customer A visited 4 times.
+- Customer B visited 6 times.
+- Customer C visited 2 times.
+
+***
