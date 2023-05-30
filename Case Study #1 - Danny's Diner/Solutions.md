@@ -56,3 +56,34 @@ GROUP BY customer_id
 - Customer C visited 2 times.
 
 ***
+### 3. What was the first item from the menu purchased by each customer?
+
+````sql
+WITH A as (
+SELECT customer_id, product_id, order_date,dense_rank() over(partition by customer_id order by order_date) as rnk
+FROM dd.sales
+)
+SELECT a.customer_id, m.product_name
+FROM A
+JOIN dd.menu m on a.product_id = m.product_id
+WHERE rnk =1
+ORDER BY a.customer_id
+````
+
+#### Steps:
+- Create a temp table ```A``` and use **Windows function** with **DENSE_RANK** to create a new column ```rnk``` based on ```order_date```.
+- Instead of **ROW_NUMBER** or **RANK**, use **DENSE_RANK** as ```order_date``` is not time-stamped hence, there is no sequence as to which item is ordered first if 2 or more items are ordered on the same day.
+
+#### Answer:
+| customer_id | product_name | 
+| ----------- | ----------- |
+| A           | curry        | 
+| A           | sushi        | 
+| B           | curry        | 
+| C           | ramen        |
+
+- Customer A's first orders are curry and sushi.
+- Customer B's first order is curry.
+- Customer C's first order is ramen.
+
+***
