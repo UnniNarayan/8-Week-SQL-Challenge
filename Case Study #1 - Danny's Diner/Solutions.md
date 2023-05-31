@@ -111,3 +111,32 @@ LIMIT 1
 - Most purchased item on the menu is ramen which is 8 times. Yummy!
 
 ***
+````sql
+WITH a as (
+SELECT s.customer_id,m.product_name, count(s.product_id) as times_bought, dense_rank() over(partition by customer_id order by count(s.product_id) desc) as rnk
+FROM dd.sales s
+JOIN dd.menu m on s.product_id = m.product_id
+GROUP BY s.customer_id,m.product_name
+ )
+SELECT customer_id, product_name, times_bought
+FROM a
+WHERE rnk=1;
+````
+
+#### Steps:
+- Create a ```temp table (a)``` and use **DENSE_RANK** to ```rank``` the ```times_bought``` for each product by descending order for each customer.
+- Generate results where product ```rnk = 1``` only as the most popular product for each customer.
+
+#### Answer:
+| customer_id | product_name | times_bought |
+| ----------- | ---------- |------------  |
+| A           | ramen        |  3   |
+| B           | sushi        |  2   |
+| B           | curry        |  2   |
+| B           | ramen        |  2   |
+| C           | ramen        |  3   |
+
+- Customer A and C's favourite item is ramen.
+- Customer B enjoys all items on the menu. He/she is a true foodie, sounds like me!
+
+***
