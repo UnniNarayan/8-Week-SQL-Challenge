@@ -111,6 +111,8 @@ LIMIT 1
 - Most purchased item on the menu is ramen which is 8 times. Yummy!
 
 ***
+### 5. Which item was the most popular for each customer?
+
 ````sql
 WITH a as (
 SELECT s.customer_id,m.product_name, count(s.product_id) as times_bought, dense_rank() over(partition by customer_id order by count(s.product_id) desc) as rnk
