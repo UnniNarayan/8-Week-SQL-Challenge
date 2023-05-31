@@ -87,3 +87,27 @@ ORDER BY a.customer_id
 - Customer C's first order is ramen.
 
 ***
+### 4. What is the most purchased item on the menu and how many times was it purchased by all customers?
+
+````sql
+SELECT m.product_name, count(s.product_id) as times_bought
+FROM dd.sales s
+JOIN dd.menu m on s.product_id = m.product_id
+GROUP BY m.product_name 
+ORDER BY count(s.product_id) desc
+LIMIT 1
+````
+
+#### Steps:
+- **COUNT** number of ```product_id``` and **ORDER BY** ```times_bought``` by descending order. 
+- Then, use **LIMIT 1** to filter highest number of purchased item.
+
+#### Answer:
+| most_purchased | product_name | 
+| ----------- | ----------- |
+| 8       | ramen |
+
+
+- Most purchased item on the menu is ramen which is 8 times. Yummy!
+
+***
