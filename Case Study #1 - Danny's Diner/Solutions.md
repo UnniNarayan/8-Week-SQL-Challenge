@@ -142,3 +142,32 @@ WHERE rnk=1;
 - Customer B enjoys all items on the menu. He/she is a true foodie, sounds like me!
 
 ***
+### 6. Which item was purchased first by the customer after they became a member?
+
+````sql
+WITH a as (
+SELECT s.customer_id,me.product_name, ROW_NUMBER() OVER(PARTITION BY s.customer_id ORDER BY s.order_date) as rownumber
+FROM dd.sales s
+JOIN dd.members m on s.customer_id = m.customer_id
+JOIN dd.menu me on s.product_id = me.product_id
+WHERE s.order_date > m.join_date
+)
+SELECT customer_id, product_name
+FROM a
+WHERE rownumber = 1;
+````
+
+#### Steps:
+- Create ```a``` by using **windows function** and partitioning ```customer_id``` by ascending ```order_date```. Then, filter ```order_date``` to be on or after ```join_date```.
+- Then, filter table by ```rownumber = 1``` to show 1st item purchased by each customer.
+
+#### Answer:
+| customer_id | order_date  | product_name |
+| ----------- | ---------- |----------  |
+| A           | 2021-01-07 | curry        |
+| B           | 2021-01-11 | sushi        |
+
+- Customer A's first order as member is curry.
+- Customer B's first order as member is sushi.
+
+***
